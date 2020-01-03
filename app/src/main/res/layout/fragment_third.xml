@@ -1,78 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content">-->
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:orientation="horizontal"-->
-<!--            android:id="@+id/linearLayout">-->
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fragment third"
+        android:textSize="50dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-
-
-            <!--            <Button-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:id="@+id/start"-->
-<!--                android:text="Start Scan"-->
-<!--                android:onClick="onClick"/>-->
-
-<!--            <Button-->
-<!--                android:id="@+id/stop"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:onClick="onClick"-->
-<!--                android:text="Stop Scan" />-->
-
-<!--        </LinearLayout>-->
-
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id= "@+id/listView2"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_gravity="bottom|end">
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/start"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:tint="@android:color/white"
-                app:srcCompat="@drawable/wifi" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/stop"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:tint="@android:color/white"
-                app:srcCompat="@drawable/stop" />
-        </LinearLayout>
-
-<!--            app:layout_constraintTop_toBottomOf="@+id/linearLayout"-->
-<!--            app:layout_constraintRight_toRightOf="parent"-->
-<!--            app:layout_constraintLeft_toLeftOf="parent"/>-->
-
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-
-</RelativeLayout>
+    </RelativeLayout>
