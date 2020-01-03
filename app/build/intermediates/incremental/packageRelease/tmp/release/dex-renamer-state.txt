@@ -1,4 +1,0 @@
-#Thu Jan 02 00:29:39 KST 2020
-base.0=C\:\\Users\\q\\Documents\\GitHub\\week1\\app\\build\\intermediates\\dex\\release\\mergeDexRelease\\out\\classes.dex
-path.0=classes.dex
-renamed.0=classes.dex
