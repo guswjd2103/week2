@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Week1_contact</string>
+    //facebook app key
+    <string name = "facebook_app_key">1487983158019154</string>
 </resources>

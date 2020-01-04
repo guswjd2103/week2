@@ -1,16 +1,24 @@
 package com.example.week1_contact;
 
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
+
+import java.security.MessageDigest;
+import android.content.pm.Signature;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
+
+        getHashKey(mContext);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -53,6 +63,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Nullable
+    public static String getHashKey(Context context) {
+        final String TAG = "KeyHash";
+        String keyHash = null;
+        try {
+            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), PackageManager.GET_SIGNATURES);
+
+            for (Signature signature : info.signatures) {
+                MessageDigest md;
+                md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                keyHash = new String(Base64.encode(md.digest(), 0));
+                Log.d(TAG, keyHash);
+            }
+
+        } catch (Exception e) {
+            Log.e("name not found", e.toString());
+
+        }
+
+        if(keyHash != null) {
+            return keyHash;
+        } else {
+            return null;
+        }
+    }
+
     private View createTabView(String tabName) {
         View tabView = LayoutInflater.from(mContext).inflate(R.layout.custom_tab, null);
         TextView txt_name = (TextView) tabView.findViewById(R.id.txt_name);
