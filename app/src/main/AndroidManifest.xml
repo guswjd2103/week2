@@ -33,6 +33,7 @@
         <activity
             android:name=".fragment.PhotoFragment_Zoomed_Activity"
             android:label="Selected Image"></activity>
+        <activity android:name=".gameActivity" />
     </application>
 
 </manifest>
