@@ -17,15 +17,17 @@ import java.util.ArrayList;
 
 public class ThirdFragAdapter extends BaseAdapter {
 
-    private ArrayList<Room> players = new ArrayList<Room>();
+    private ArrayList<Room> roomList = new ArrayList<Room>();
+    private String userName;
 
-    public ThirdFragAdapter(ArrayList<Room> players){
-        this.players = players;
+    public ThirdFragAdapter(ArrayList<Room> roomList, String userName){
+        this.userName = userName;
+        this.roomList = roomList;
     }
 
     @Override
     public int getCount() {
-        return players.size();
+        return roomList.size();
     }
 
     @Override
@@ -37,19 +39,20 @@ public class ThirdFragAdapter extends BaseAdapter {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.connected_person, parent, false);
         }
+
         TextView nameTextView = (TextView) convertView.findViewById(R.id.userName);
         TextView scoreTextView = (TextView) convertView.findViewById(R.id.userScore);
         Button inviteButton = (Button) convertView.findViewById(R.id.inviteButton);
 
-        final Room player = players.get(position);
+        final Room room = roomList.get(position);
 
-        nameTextView.setText(player.getUserName());
-        scoreTextView.setText(player.getUserScore());
+        nameTextView.setText(room.getUserNum());
+        scoreTextView.setText(room.getUserScore());
         inviteButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), gameActivity.class);
-                intent.putExtra("name", player.getUserName());
+                intent.putExtra("name", userName);
                 v.getContext().startActivity(intent);
             }
         });
@@ -63,7 +66,7 @@ public class ThirdFragAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return players.get(position);
+        return roomList.get(position);
     }
 
 }
