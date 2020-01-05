@@ -11,15 +11,15 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.week1_contact.fragment.Player;
+import com.example.week1_contact.fragment.Room;
 
 import java.util.ArrayList;
 
 public class ThirdFragAdapter extends BaseAdapter {
 
-    private ArrayList<Player> players = new ArrayList<Player>();
+    private ArrayList<Room> players = new ArrayList<Room>();
 
-    public ThirdFragAdapter(ArrayList<Player> players){
+    public ThirdFragAdapter(ArrayList<Room> players){
         this.players = players;
     }
 
@@ -41,7 +41,7 @@ public class ThirdFragAdapter extends BaseAdapter {
         TextView scoreTextView = (TextView) convertView.findViewById(R.id.userScore);
         Button inviteButton = (Button) convertView.findViewById(R.id.inviteButton);
 
-        final Player player = players.get(position);
+        final Room player = players.get(position);
 
         nameTextView.setText(player.getUserName());
         scoreTextView.setText(player.getUserScore());
