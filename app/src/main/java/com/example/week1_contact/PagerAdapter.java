@@ -1,5 +1,8 @@
 package com.example.week1_contact;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -10,10 +13,12 @@ import com.example.week1_contact.fragment.ThirdFragment;
 
 public class PagerAdapter extends FragmentPagerAdapter {
     int mNumOfTabs;
+    String username;
 
-    public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+    public PagerAdapter(FragmentManager fm, int NumOfTabs, String username) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
+        this.username = username;
     }
 
     @Override
@@ -22,6 +27,10 @@ public class PagerAdapter extends FragmentPagerAdapter {
         switch (position) {
             case 0:
                 ContactFragment tab1 = new ContactFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("username",username);
+                tab1.setArguments(bundle);
+                Log.d("frag_con","보낸 유저네임 -어뎁터 :"+username);
                 return tab1;
             case 1:
                 PhotoFragment tab2 = new PhotoFragment();

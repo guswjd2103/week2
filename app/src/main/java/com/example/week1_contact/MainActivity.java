@@ -1,8 +1,10 @@
 package com.example.week1_contact;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -17,19 +19,35 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.tabs.TabLayout;
 
+import java.io.File;
 import java.security.MessageDigest;
+import java.util.List;
+
 import android.content.pm.Signature;
 
-public class MainActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
+public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
     private Context mContext;
+    protected String userName;
+///////////
+    Retrofit retrofit;
+    RetrofitInterface retrofitInterface;
+//////////
 
     @Override
     protected void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mContext = getApplicationContext();
+
+        Intent intent = getIntent();
+        userName = intent.getExtras().getString("username");
 
         getHashKey(mContext);
 
@@ -44,8 +62,52 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.addTab(tabLayout.newTab().setText("catchmind"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
+//////////////////////
+/*
+        retrofit = new Retrofit.Builder().baseUrl(retrofitInterface.API_URL).addConverterFactory(GsonConverterFactory.create()).build();
+        retrofitInterface = retrofit.create(RetrofitInterface.class);
+
+        Call<List<ContactData>> comment = retrofitInterface.sendUserName("test");
+        comment.enqueue(new Callback<List<ContactData>>() {
+            @Override
+            public void onResponse(Call<List<ContactData>> call, Response<List<ContactData>> response) {
+                List<ContactData> contacts = response.body();
+                for(int i = 0 ; i< contacts.size();i ++) {
+                    Log.d("asdf", "start: " + contacts.get(i).getName() + " :end");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ContactData>> call, Throwable t) {
+                Log.v("error",t.getMessage());
+            }
+        });
+
+
+        Call<List<ContactData>> comment2 = retrofitInterface.getContacts("test");
+        comment2.enqueue(new Callback<List<ContactData>>() {
+            @Override
+            public void onResponse(Call<List<ContactData>> call, Response<List<ContactData>> response) {
+                List<ContactData> contacts = response.body();
+                Log.d("qwer", "왔");
+                for(int i = 0 ; i < contacts.size(); i++){
+                    Log.d("qewr", "contacts : "+contacts.get(i).getName());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<ContactData>> call, Throwable t) {
+                Log.d("qwer", "안왔");
+            }
+        });
+*/
+
+
+
+/////////////////////
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
+        final PagerAdapter adapter = new PagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount(), userName);
+        Log.d("frag_con","보낸 유저네임 -main:" + userName);
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

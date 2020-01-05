@@ -3,13 +3,13 @@ package com.example.week1_contact;
 public class ContactData implements  Comparable<ContactData> {
     private int photo;
     private String name;
-    private String phoneNumber;
+    private String phone;
     private int id;
 
     public ContactData(int photo, String name, String phoneNumber, int id) {
         this.photo = photo;
         this.name = name;
-        this.phoneNumber = phoneNumber;
+        this.phone = phoneNumber;
         this.id = id;
     }
 
@@ -22,7 +22,7 @@ public class ContactData implements  Comparable<ContactData> {
     }
 
     public String getPhoneNumber() {
-        return this.phoneNumber;
+        return this.phone;
     }
 
     public int getId() {
