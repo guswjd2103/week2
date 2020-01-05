@@ -21,6 +21,10 @@ import androidx.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
@@ -35,6 +39,7 @@ public class gameActivity extends Activity {
     private String answer;
     private boolean Offense_Defense = false;        //true : 그리기 & false : 맞추기
     String userName;
+    int roomNumber = -1;
 
     ArrayList<Point> points = new ArrayList<Point>();
     int color = Color.BLACK;
@@ -107,6 +112,7 @@ public class gameActivity extends Activity {
 
         Intent intent = getIntent();
         userName = intent.getExtras().getString("name");
+        roomNumber = intent.getExtras().getInt("roomNumber");
 
         TextView textView = (TextView)findViewById(R.id.playerName);
         textView.setText(userName);
@@ -175,7 +181,15 @@ public class gameActivity extends Activity {
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-            mSocket.emit("joinRoom", userName); //서버쪽으로 이벤트 발생시키기
+            JSONObject entranceinfo = new JSONObject();
+            try {
+                entranceinfo.put("username", userName);
+                entranceinfo.put("roomnumber", roomNumber);
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+            }
+            mSocket.emit("joinRoom", entranceinfo); //서버쪽으로 이벤트 발생시키기
             //방 번호, username을 보냄
         }
     };
@@ -184,7 +198,16 @@ public class gameActivity extends Activity {
     private Emitter.Listener onNewUser = new Emitter.Listener() {
         @Override
         public void call(Object... args) {
-
+            JSONObject entranceinfo = new JSONObject();
+            try{
+                entranceinfo = (JSONObject)args[0];
+                String eUser = entranceinfo.getString("user");
+                int eRoom = entranceinfo.getInt("room");
+                Toast.makeText(getApplicationContext(),eUser+"님께서"+eRoom+"방에 입장하셨습니다",Toast.LENGTH_SHORT).show();
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+            }
         }
     };
 
