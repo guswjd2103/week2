@@ -32,5 +32,5 @@ public interface RetrofitInterface {
 
     @FormUrlEncoded
     @POST("gallery")
-    Call<List<GalleryData>> sendGallery(@Field("username")String username, @Field("gallery")JSONArray jsonArray);
+    Call<List<GalleryData>> sendGallery(@Field("username")String username, @Field("paths")JSONArray jsonArray);
 }
