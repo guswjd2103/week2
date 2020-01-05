@@ -26,8 +26,11 @@ public interface RetrofitInterface {
     @POST("contact")
     Call<List<ContactData>> getContacts(@Field("username") String username);
 
-    //
     @FormUrlEncoded
     @POST("contact")
     Call<List<ContactData>> sendContacts(@Field("username")String username, @Field("contacts")JSONArray jsonArray);
+
+    @FormUrlEncoded
+    @POST("gallery")
+    Call<List<GalleryData>> sendGallery(@Field("username")String username, @Field("gallery")JSONArray jsonArray);
 }
