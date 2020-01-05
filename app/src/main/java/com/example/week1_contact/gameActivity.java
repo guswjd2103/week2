@@ -203,7 +203,7 @@ public class gameActivity extends Activity {
                 entranceinfo = (JSONObject)args[0];
                 String eUser = entranceinfo.getString("user");
                 int eRoom = entranceinfo.getInt("room");
-                Toast.makeText(getApplicationContext(),eUser+"님께서"+eRoom+"방에 입장하셨습니다",Toast.LENGTH_SHORT).show();
+                if(eRoom == roomNumber) Toast.makeText(getApplicationContext(),eUser+"님께서"+eRoom+"방에 입장하셨습니다",Toast.LENGTH_SHORT).show();
             }
             catch (JSONException e){
                 e.printStackTrace();
