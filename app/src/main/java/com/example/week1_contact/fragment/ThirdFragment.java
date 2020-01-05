@@ -1,10 +1,12 @@
 package com.example.week1_contact.fragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
@@ -12,37 +14,91 @@ import androidx.fragment.app.Fragment;
 import com.example.week1_contact.R;
 import com.example.week1_contact.ThirdFragAdapter;
 
-import java.lang.reflect.Array;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.List;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 
 public class ThirdFragment extends Fragment {
 
-    private ArrayList<Player> players = new ArrayList<Player>();
+    private String TAG = "MainActivity";
+    private Socket mSocket;
+    private ArrayList<Room> rooms = new ArrayList<Room>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_catchmind, container, false);
 
+        SharedPreferences sf= getContext().getSharedPreferences("USERSIGN", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sf.edit();
+
+        View view = inflater.inflate(R.layout.fragment_catchmind, container, false);
         ListView listview = (ListView)view.findViewById(R.id.playerList);
 
         //DB로 부터 player 정보 받아오는 부분/////
-        Player playerA = new Player();
-        playerA.setUserName("playerA");
-        playerA.setUserScore("0");
-        Player playerB = new Player();
-        playerB.setUserName("playerB");
-        playerB.setUserScore("1");
+        Room roomA = new Room();
+        roomA.setUserName("roomA");
+        roomA.setUserScore("0");
+        Room roomB = new Room();
+        roomB.setUserName("roomB");
+        roomB.setUserScore("0");
 
-        players.add(playerA);
-        players.add(playerB);
+        rooms.add(roomA);
+        rooms.add(roomB);
         //////////////////////////////////////////
 
-        ThirdFragAdapter thirdFragAdapter = new ThirdFragAdapter(players);
+        ThirdFragAdapter thirdFragAdapter = new ThirdFragAdapter(rooms);
         listview.setAdapter(thirdFragAdapter);
+
+        try {
+            mSocket = IO.socket("http://192.249.19.251:0280");
+            mSocket.connect();
+            mSocket.on(Socket.EVENT_CONNECT, onConnect); //Socket.EVENT_CONNECT : 연결이 성공하면 발생하는 이벤트, onConnect : callback객체
+            mSocket.on("serverMessage", onMessageReceived); // serverMessage 이벤트로 오는 메시지를 받기 위한 call back 객체 : onMessageReceived
+            mSocket.on("newUser", onNewUser); //서버에서 보내는 newUser이벤트로 오는 것을 받기 위한 객체
+        } catch(URISyntaxException e) {
+            e.printStackTrace();
+        }
 
         return view;
     }
+
+
+    // Socket서버에 connect 됨과 동시에 발생하는 객체
+    private Emitter.Listener onConnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            mSocket.emit("clientMessage", "hi"); //서버쪽으로 이벤트 발생시키기
+            //방 번호, username을 보냄
+        }
+    };
+
+    // 서버에서 serverMessage이벤트를 발생시켜 보내는 메시지를 받는 객체
+    private Emitter.Listener onMessageReceived = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            // 전달받은 데이터 : JSON으로 서버에서 보냄
+            try {
+                JSONObject receivedData = (JSONObject) args[0];
+                Log.d(TAG, receivedData.getString("msg"));
+                Log.d(TAG, receivedData.getString("data"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
+    //서버 방 입장
+    private Emitter.Listener onNewUser = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+        }
+    };
 
 }
