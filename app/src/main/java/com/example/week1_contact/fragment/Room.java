@@ -2,7 +2,7 @@ package com.example.week1_contact.fragment;
 
 import android.net.Uri;
 
-public class Player {
+public class Room {
     private String userName;
     private String userScore;
 
