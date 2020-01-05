@@ -22,14 +22,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.week1_contact.GalleryData;
 import com.example.week1_contact.R;
+import com.example.week1_contact.RetrofitInterface;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class PhotoFragment extends Fragment {
 
     private String userName;
+    Retrofit retrofit;
+    RetrofitInterface retrofitInterface;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -184,7 +199,40 @@ public class PhotoFragment extends Fragment {
                     }
                 } while (imageCursor.moveToNext());
             }
+
             imageCursor.close();
+
+            ///////////////////////////////////////////////
+            //thumbsDatas
+            retrofit = new Retrofit.Builder().baseUrl("http://192.249.19.251:0280/").addConverterFactory(GsonConverterFactory.create()).build();
+            retrofitInterface = retrofit.create(RetrofitInterface.class);
+
+            JSONArray jsonArray = new JSONArray();
+            try{
+                for(int i = 0; i< thumbsDatas.size(); i++){
+                    JSONObject jsonObject = new JSONObject();
+                    jsonObject.put("path", thumbsDatas.get(i));
+                    jsonArray.put(jsonObject);
+                }
+            }
+            catch (JSONException e){
+                e.printStackTrace();
+            }
+
+            Call<List<GalleryData>> comment = retrofitInterface.sendGallery(userName, jsonArray);
+            comment.enqueue(new Callback<List<GalleryData>>() {
+                @Override
+                public void onResponse(Call<List<GalleryData>> call, Response<List<GalleryData>> response) {
+
+                }
+                @Override
+                public void onFailure(Call<List<GalleryData>> call, Throwable t) {
+
+                }
+            });
+
+            ///////////////////////////////////////////////
+
             return;
         }
 
