@@ -28,7 +28,7 @@
     </LinearLayout>
 
     <Button
-        android:text="button1"
+        android:text="입장하기"
         android:id="@+id/inviteButton"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"

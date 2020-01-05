@@ -19,12 +19,22 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 
+import com.google.gson.JsonObject;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 
 public class gameActivity extends Activity {
 
+    private String TAG = "GameActivity";
+    private Socket mSocket;
     private String answer;
     private boolean Offense_Defense = false;        //true : 그리기 & false : 맞추기
+    String userName;
 
     ArrayList<Point> points = new ArrayList<Point>();
     int color = Color.BLACK;
@@ -83,14 +93,23 @@ public class gameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gameboard);
 
+        try {
+            mSocket = IO.socket("http://192.249.19.251:0280");
+            mSocket.connect();
+            mSocket.on(Socket.EVENT_CONNECT, onConnect); //Socket.EVENT_CONNECT : 연결이 성공하면 발생하는 이벤트, onConnect : callback객체
+            mSocket.on("newUser", onNewUser); //서버에서 보내는 newUser이벤트로 오는 것을 받기 위한 객체
+        } catch(URISyntaxException e) {
+            e.printStackTrace();
+        }
+
         //서버로 부터 random 하게 제시어 받아오기
         answer = "apple";
 
         Intent intent = getIntent();
-        String name = intent.getExtras().getString("name");
+        userName = intent.getExtras().getString("name");
 
         TextView textView = (TextView)findViewById(R.id.playerName);
-        textView.setText(name);
+        textView.setText(userName);
 
         final MyView m = new MyView(this);
         drawlinear = findViewById(R.id.drawCanvas);
@@ -132,6 +151,8 @@ public class gameActivity extends Activity {
         answerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                JsonObject answerObject = new JsonObject();
+//                answerObject.addProperty("answer", )
                 EditText answer_u = (EditText)findViewById(R.id.answer);
                 InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(answer_u.getWindowToken(),0);
@@ -145,5 +166,26 @@ public class gameActivity extends Activity {
                 }
             }
         });
+
+
     }
+
+
+    // Socket서버에 connect 됨과 동시에 발생하는 객체
+    private Emitter.Listener onConnect = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            mSocket.emit("joinRoom", userName); //서버쪽으로 이벤트 발생시키기
+            //방 번호, username을 보냄
+        }
+    };
+
+    //서버 방 입장
+    private Emitter.Listener onNewUser = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+
+        }
+    };
+
 }

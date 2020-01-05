@@ -69,13 +69,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"/>
+            android:inputType="textPersonName"
+            android:text = "입력하세요"/>
 
         <Button
             android:id="@+id/answerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="SEND" />
+            android:text="제출" />
     </LinearLayout>
 
 </LinearLayout>

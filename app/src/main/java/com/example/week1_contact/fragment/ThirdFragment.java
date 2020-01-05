@@ -17,6 +17,7 @@ import com.example.week1_contact.ThirdFragAdapter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Array;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
@@ -27,10 +28,11 @@ import io.socket.emitter.Emitter;
 
 public class ThirdFragment extends Fragment {
 
-    private String TAG = "MainActivity";
+    private String TAG = "ThirdFragment";
     private Socket mSocket;
     private ArrayList<Room> rooms = new ArrayList<Room>();
     private String userName;
+    private ArrayList<String> userList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -47,34 +49,39 @@ public class ThirdFragment extends Fragment {
             userName = bundle.getString("username");
         }
 
+
         //DB로 부터 player 정보 받아오는 부분/////
         Room roomA = new Room();
-        roomA.setUserName("roomA");
+        userList = roomA.getUserName();
+        if(!userList.contains(userName)) {
+            userList.add(userName);
+        }
+        int userNum = userList.size();
+        roomA.setUserNum(userNum);
         roomA.setUserScore("0");
-        Room roomB = new Room();
-        roomB.setUserName("roomB");
-        roomB.setUserScore("0");
+//        Room roomB = new Room();
+//        roomB.setUserName("roomB");
+//        roomB.setUserScore("0");
 
         rooms.add(roomA);
-        rooms.add(roomB);
+//        rooms.add(roomB);
         //////////////////////////////////////////
 
-        ThirdFragAdapter thirdFragAdapter = new ThirdFragAdapter(rooms);
+        ThirdFragAdapter thirdFragAdapter = new ThirdFragAdapter(rooms, userName);
         listview.setAdapter(thirdFragAdapter);
 
         try {
             mSocket = IO.socket("http://192.249.19.251:0280");
             mSocket.connect();
-            mSocket.on(Socket.EVENT_CONNECT, onConnect); //Socket.EVENT_CONNECT : 연결이 성공하면 발생하는 이벤트, onConnect : callback객체
+            mSocket.on(Socket.EVENT_CONNECT, onConnect); //Socket.EVENT_CONNECT : 연결이 성공하면 발생하는 이벤트, onConnect : callback 객체
             mSocket.on("serverMessage", onMessageReceived); // serverMessage 이벤트로 오는 메시지를 받기 위한 call back 객체 : onMessageReceived
-            mSocket.on("newUser", onNewUser); //서버에서 보내는 newUser이벤트로 오는 것을 받기 위한 객체
+//            mSocket.on("newUser", onNewUser); //서버에서 보내는 newUser이벤트로 오는 것을 받기 위한 객체
         } catch(URISyntaxException e) {
             e.printStackTrace();
         }
 
         return view;
     }
-
 
     // Socket서버에 connect 됨과 동시에 발생하는 객체
     private Emitter.Listener onConnect = new Emitter.Listener() {
@@ -100,12 +107,5 @@ public class ThirdFragment extends Fragment {
         }
     };
 
-    //서버 방 입장
-    private Emitter.Listener onNewUser = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-
-        }
-    };
 
 }
