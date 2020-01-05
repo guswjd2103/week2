@@ -30,6 +30,7 @@ public class ThirdFragment extends Fragment {
     private String TAG = "MainActivity";
     private Socket mSocket;
     private ArrayList<Room> rooms = new ArrayList<Room>();
+    private String userName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +40,12 @@ public class ThirdFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_catchmind, container, false);
         ListView listview = (ListView)view.findViewById(R.id.playerList);
+
+        Bundle bundle = this.getArguments();
+        if(bundle != null){
+            bundle = getArguments();
+            userName = bundle.getString("username");
+        }
 
         //DB로 부터 player 정보 받아오는 부분/////
         Room roomA = new Room();

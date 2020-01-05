@@ -23,20 +23,23 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-
+        Bundle bundle = new Bundle();
         switch (position) {
             case 0:
                 ContactFragment tab1 = new ContactFragment();
-                Bundle bundle = new Bundle();
                 bundle.putString("username",username);
                 tab1.setArguments(bundle);
                 Log.d("frag_con","보낸 유저네임 -어뎁터 :"+username);
                 return tab1;
             case 1:
                 PhotoFragment tab2 = new PhotoFragment();
+                bundle.putString("username",username);
+                tab2.setArguments(bundle);
                 return tab2;
             case 2:
                 ThirdFragment tab3 = new ThirdFragment();
+                bundle.putString("username",username);
+                tab3.setArguments(bundle);
                 return tab3;
             default:
                 return null;
