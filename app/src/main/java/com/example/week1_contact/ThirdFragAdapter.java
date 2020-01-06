@@ -45,15 +45,16 @@ public class ThirdFragAdapter extends BaseAdapter {
         Button inviteButton = (Button) convertView.findViewById(R.id.inviteButton);
 
         final Room room = roomList.get(position);
-
-        nameTextView.setText(room.getUserNum());
+        String userNum = Integer.toString(room.getUserNum());
+        nameTextView.setText(userNum);
         scoreTextView.setText(room.getUserScore());
         inviteButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), gameActivity.class);
                 intent.putExtra("name", userName);
-                intent.putExtra("roomNumber", position);
+                intent.putExtra("roomName", room.getRoomName());
+
                 v.getContext().startActivity(intent);
             }
         });

@@ -32,7 +32,7 @@ public class ThirdFragment extends Fragment {
     private Socket mSocket;
     private ArrayList<Room> rooms = new ArrayList<Room>();
     private String userName;
-    private ArrayList<String> userList;
+    private ArrayList<String> userList = new ArrayList<String>();;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,12 +53,19 @@ public class ThirdFragment extends Fragment {
         //DB로 부터 player 정보 받아오는 부분/////
         Room roomA = new Room();
         userList = roomA.getUserName();
-        if(!userList.contains(userName)) {
+        if(userList!=null) {
+            if(!userList.contains(userName)) {
+                userList.add(userName);
+            }
+        } else {
+            userList = new ArrayList<String>();
             userList.add(userName);
         }
+
         int userNum = userList.size();
         roomA.setUserNum(userNum);
         roomA.setUserScore("0");
+        roomA.setRoomNum("호호호");
 //        Room roomB = new Room();
 //        roomB.setUserName("roomB");
 //        roomB.setUserScore("0");
@@ -106,6 +113,5 @@ public class ThirdFragment extends Fragment {
             }
         }
     };
-
 
 }

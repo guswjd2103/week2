@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -20,6 +22,11 @@ import androidx.annotation.Nullable;
 
 
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +46,11 @@ public class gameActivity extends Activity {
     private String answer;
     private boolean Offense_Defense = false;        //true : 그리기 & false : 맞추기
     String userName;
-    int roomNumber = -1;
+    String roomName;
+
+    private Button answerButton;
+    private EditText answer_u;
+    private TextView tvMain;
 
     ArrayList<Point> points = new ArrayList<Point>();
     int color = Color.BLACK;
@@ -56,6 +67,22 @@ public class gameActivity extends Activity {
             this.y = y;
             this.check = check;
             this.color = color;
+        }
+
+        public float getX() {
+            return this.x;
+        }
+
+        public float getY() {
+            return this.y;
+        }
+
+        public boolean getCheck() {
+            return this.check;
+        }
+
+        public int getColor() {
+            return this.color;
         }
     }
 
@@ -74,16 +101,22 @@ public class gameActivity extends Activity {
             }
         }
 
-        @Override
+        @Override //그리기
         public boolean onTouchEvent(MotionEvent event) {
             float x = event.getX();
             float y = event.getY();
 
             switch(event.getAction()){
                 case MotionEvent.ACTION_DOWN :
-                    points.add(new Point(x,y,false, color));
+                    Point addPoint = new Point(x,y,false, color);
+                    points.add(addPoint);
+                    sendDrawSocket(addPoint);
+                    break;
                 case MotionEvent.ACTION_MOVE :
-                    points.add(new Point(x,y,true,color));
+                    Point addPoint2 = new Point(x,y,true, color);
+                    points.add(addPoint2);
+                    sendDrawSocket(addPoint2);
+                    Log.d(TAG, "좌표 : x:"+x+" / y:"+y);
                     break;
                 case MotionEvent.ACTION_UP :
                     break;
@@ -98,28 +131,22 @@ public class gameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gameboard);
 
-        try {
-            mSocket = IO.socket("http://192.249.19.251:0280");
-            mSocket.connect();
-            mSocket.on(Socket.EVENT_CONNECT, onConnect); //Socket.EVENT_CONNECT : 연결이 성공하면 발생하는 이벤트, onConnect : callback객체
-            mSocket.on("newUser", onNewUser); //서버에서 보내는 newUser이벤트로 오는 것을 받기 위한 객체
-        } catch(URISyntaxException e) {
-            e.printStackTrace();
-        }
-
         //서버로 부터 random 하게 제시어 받아오기
         answer = "apple";
 
         Intent intent = getIntent();
         userName = intent.getExtras().getString("name");
-        roomNumber = intent.getExtras().getInt("roomNumber");
+        roomName = intent.getExtras().getString("roomName");
 
         TextView textView = (TextView)findViewById(R.id.playerName);
-        textView.setText(userName);
+        textView.setText(roomName);
 
         final MyView m = new MyView(this);
         drawlinear = findViewById(R.id.drawCanvas);
         drawlinear.addView(m);
+
+        answer_u = (EditText)findViewById(R.id.answer);
+        tvMain = (TextView)findViewById(R.id.tvMain);
 
         Button redButton = (Button)findViewById(R.id.redButton);
         Button blueButton = (Button)findViewById(R.id.blueButton);
@@ -147,68 +174,167 @@ public class gameActivity extends Activity {
         Button resetButton = (Button)findViewById(R.id.resetButton);
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                points.clear();
-                m.invalidate();
+            public void onClick(View v) { //reset하면 RESET했다고 TOAST띄워주기
+                JsonObject resetObject = new JsonObject();
+                resetObject.addProperty("userName", userName + "");
+                JSONObject jsonObject = null;
+
+                try{
+                    jsonObject =  new JSONObject(resetObject.toString());
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                mSocket.emit("reset", jsonObject);
+
             }
         });
 
-        Button answerButton = (Button)findViewById(R.id.answerButton);
+        answerButton = (Button)findViewById(R.id.answerButton);
         answerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 JsonObject answerObject = new JsonObject();
-//                answerObject.addProperty("answer", )
-                EditText answer_u = (EditText)findViewById(R.id.answer);
-                InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(answer_u.getWindowToken(),0);
-                //정답과 비교해서 턴을 넘겨주는?
-                if(Offense_Defense == true) return;
+                answerObject.addProperty("answer", answer_u.getText() + "");
+                answerObject.addProperty("userName", userName + "");
+                JSONObject jsonObject = null;
+
+                try{
+                    jsonObject =  new JSONObject(answerObject.toString());
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                mSocket.emit("reqMsg", jsonObject);
+
                 if(answer.equals(answer_u.getText().toString())){
                     Toast.makeText(getApplicationContext(), "Correct", Toast.LENGTH_SHORT).show();
                 }
                 else{
                     Toast.makeText(getApplicationContext(), "InCorrect", Toast.LENGTH_SHORT).show();
                 }
+                answer_u.setText("");
+
+                InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(answer_u.getWindowToken(),0);
+                //정답과 비교해서 턴을 넘겨주는?
+//                if(Offense_Defense == true) return;
             }
         });
 
+        try {
+            mSocket = IO.socket("http://192.249.19.251:0280");
+            mSocket.on(Socket.EVENT_CONNECT, (Object... objects) -> {
+                JsonObject enterObject = new JsonObject();
+                enterObject.addProperty("roomName", roomName);
+                enterObject.addProperty("username", userName);
+                JSONObject jsonObject = null;
+                try {
+                    jsonObject = new JSONObject(enterObject.toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mSocket.emit("joinRoom",jsonObject);
+            }).on("recMsg", (Object... objects) -> {
+                JsonParser jsonParsers = new JsonParser();
+                JsonObject jsonObject = (JsonObject) jsonParsers.parse(objects[0] + "");
+                runOnUiThread(()->{
+                    tvMain.setText(tvMain.getText().toString()+jsonObject.get("answer").getAsString());
+                });
+            }).on("newUser", (Object... objects) -> {
+                Log.d("newUsersocket", "enternewUser socket");
+                JsonParser jsonParsers = new JsonParser();
+                JsonObject entranceinfo = (JsonObject) jsonParsers.parse(objects[0] + "");
+                Log.d("enteranceInfo", entranceinfo.toString());
+                try{
+                    String eUser = entranceinfo.get("username").getAsString();
+                    String eRoom = entranceinfo.get("roomName").getAsString();
+                    Log.d("roomName", eRoom);
+                    Log.d("userName", eUser);
+                    if(eRoom.equals(roomName)) {
+                        runOnUiThread(new Runnable() {
+                            public void run() {
+                                final Toast toast = Toast.makeText(getApplicationContext(), eUser +  "님께서 " + eRoom + " 방에 입장하셨습니다", Toast.LENGTH_SHORT);
+                                int offsetX = 0;
+                                int offsetY = 0;
+                                toast.setGravity(Gravity.CENTER, offsetX, offsetY);
+                                toast.show();
+                            }
+                        });
+                    }
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }).on("paint",(Object... objects) -> {
+                Log.d("paintSocket", "point android socket");
+                JsonParser jsonParsers = new JsonParser();
+                JsonObject paintinfo = (JsonObject) jsonParsers.parse(objects[0] + "");
+                Log.d("paintinfo", paintinfo.toString());
+                try{
+                    Float x = paintinfo.get("x").getAsFloat();
+                    Float y = paintinfo.get("y").getAsFloat();
+                    boolean check = paintinfo.get("check").getAsBoolean();
+                    int color = paintinfo.get("color").getAsInt();
+                    Log.d("x", Float.toString(x));
+                    Log.d("y", Float.toString(y));
+
+                    Point receivedPoint = new Point(x,y, check, color);
+                    points.add(receivedPoint);
+                    m.invalidate();
+
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }).on("resetPaint",(Object... objects) -> {
+                JsonParser jsonParsers = new JsonParser();
+                JsonObject resetinfo = (JsonObject) jsonParsers.parse(objects[0] + "");
+                Log.d("resetinfo", resetinfo.toString());
+                try{
+                    String userName = resetinfo.get("resetMsg").getAsString();
+                    points.clear();
+                    m.invalidate();
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            final Toast toast = Toast.makeText(getApplicationContext(), userName +  "님께서 " + " 그림판을 reset 했습니다", Toast.LENGTH_SHORT);
+                            int offsetX = 0;
+                            int offsetY = 0;
+                            toast.setGravity(Gravity.CENTER, offsetX, offsetY);
+                            toast.show();
+                        }
+                    });
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            });
+            mSocket.connect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
+    public void sendDrawSocket(Point point){
+//        Log.d("socket","send point function");
 
-    // Socket서버에 connect 됨과 동시에 발생하는 객체
-    private Emitter.Listener onConnect = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            JSONObject entranceinfo = new JSONObject();
-            try {
-                entranceinfo.put("username", userName);
-                entranceinfo.put("roomnumber", roomNumber);
-            }
-            catch (JSONException e){
-                e.printStackTrace();
-            }
-            mSocket.emit("joinRoom", entranceinfo); //서버쪽으로 이벤트 발생시키기
-            //방 번호, username을 보냄
-        }
-    };
+        JsonObject pointObject = new JsonObject();
+        pointObject.addProperty("x", point.getX());
+        pointObject.addProperty("y", point.getY());
+        pointObject.addProperty("check", point.getCheck());
+        pointObject.addProperty("color", point.getColor());
 
-    //서버 방 입장
-    private Emitter.Listener onNewUser = new Emitter.Listener() {
-        @Override
-        public void call(Object... args) {
-            JSONObject entranceinfo = new JSONObject();
-            try{
-                entranceinfo = (JSONObject)args[0];
-                String eUser = entranceinfo.getString("user");
-                int eRoom = entranceinfo.getInt("room");
-                if(eRoom == roomNumber) Toast.makeText(getApplicationContext(),eUser+"님께서"+eRoom+"방에 입장하셨습니다",Toast.LENGTH_SHORT).show();
-            }
-            catch (JSONException e){
-                e.printStackTrace();
-            }
+        JSONObject jsonObject = null;
+
+        try{
+            jsonObject =  new JSONObject(pointObject.toString());
+        } catch (JSONException e){
+            e.printStackTrace();
+
         }
-    };
+
+        mSocket.emit("draw", jsonObject);
+    }
 
 }
