@@ -8,6 +8,7 @@ public class Room {
     private ArrayList<String> userName;
     private int userNum;
     private String userScore;
+    private String roomName;
 
 
     public void setUserName(ArrayList<String> userName){
@@ -19,6 +20,9 @@ public class Room {
     public void setUserNum(int userNum){
         this.userNum = userNum;
     }
+    public void setRoomNum(String roomName){
+        this.roomName = roomName;
+    }
 
     public ArrayList<String> getUserName(){
         return this.userName;
@@ -28,5 +32,8 @@ public class Room {
     }
     public int getUserNum(){
         return this.userNum;
+    }
+    public String getRoomName(){
+        return this.getRoomName();
     }
 }
