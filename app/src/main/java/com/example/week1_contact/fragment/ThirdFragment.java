@@ -32,7 +32,8 @@ public class ThirdFragment extends Fragment {
     private Socket mSocket;
     private ArrayList<Room> rooms = new ArrayList<Room>();
     private String userName;
-    private ArrayList<String> userList = new ArrayList<String>();;
+    private ArrayList<String> userList = new ArrayList<String>();
+    int userNum;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -62,8 +63,9 @@ public class ThirdFragment extends Fragment {
             userList.add(userName);
         }
 
-        int userNum = userList.size();
+//        int userNum = userList.size();
         roomA.setUserNum(userNum);
+        Log.d("roomA user number", Integer.toString(userNum));
         roomA.setUserScore("0");
         roomA.setRoomNum("호호호");
 //        Room roomB = new Room();
@@ -82,7 +84,7 @@ public class ThirdFragment extends Fragment {
             mSocket.connect();
             mSocket.on(Socket.EVENT_CONNECT, onConnect); //Socket.EVENT_CONNECT : 연결이 성공하면 발생하는 이벤트, onConnect : callback 객체
             mSocket.on("serverMessage", onMessageReceived); // serverMessage 이벤트로 오는 메시지를 받기 위한 call back 객체 : onMessageReceived
-//            mSocket.on("newUser", onNewUser); //서버에서 보내는 newUser이벤트로 오는 것을 받기 위한 객체
+            mSocket.on("countUsers", onCountUsers);
         } catch(URISyntaxException e) {
             e.printStackTrace();
         }
@@ -95,6 +97,7 @@ public class ThirdFragment extends Fragment {
         @Override
         public void call(Object... args) {
             mSocket.emit("clientMessage", "hi"); //서버쪽으로 이벤트 발생시키기
+            mSocket.emit("countUsers", "count users");
             //방 번호, username을 보냄
         }
     };
@@ -113,5 +116,21 @@ public class ThirdFragment extends Fragment {
             }
         }
     };
+
+    private Emitter.Listener onCountUsers = new Emitter.Listener() {
+        @Override
+        public void call(Object... args) {
+            // 전달받은 데이터 : JSON으로 서버에서 보냄
+            try {
+                JSONObject receivedCount = (JSONObject) args[0];
+                userNum = receivedCount.getInt("userNum");
+                Log.d("user list", receivedCount.getJSONArray("users").toString());
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 
 }

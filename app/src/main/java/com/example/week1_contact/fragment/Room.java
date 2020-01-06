@@ -1,7 +1,5 @@
 package com.example.week1_contact.fragment;
 
-import android.net.Uri;
-
 import java.util.ArrayList;
 
 public class Room {
@@ -34,6 +32,6 @@ public class Room {
         return this.userNum;
     }
     public String getRoomName(){
-        return this.getRoomName();
+        return this.roomName;
     }
 }

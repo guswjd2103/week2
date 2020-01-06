@@ -2,42 +2,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/conn_listLayout">
+    android:background="@drawable/conn_listlayout">
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_weight="3"
-        android:background="@drawable/conn_listLayout">
+        android:weightSum="6"
+        android:background="@drawable/conn_listlayout">
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/userName"
+            android:layout_width="38dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="New Text"
-            android:id="@+id/userName"
-            android:textSize="20dp"
-            android:gravity="center_vertical"
             android:layout_weight="2"
-            android:background="@drawable/conn_roomNumber"/>
+            android:background="@drawable/conn_roomnumber"
+            android:gravity="center_vertical"
+            android:text="New Text"
+            android:textSize="20sp" />
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center"/>
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/userScore"
-            android:textSize="16dp"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_weight="1"
-            android:background="@drawable/conn_userNumber"/>
+            android:background="@drawable/conn_usernumber"
+            android:gravity="center_vertical"
+            android:text="New Text"
+            android:textSize="16sp" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center"
+            android:layout_weight="2"/>
+
+        <Button
+            android:id="@+id/inviteButton"
+            android:layout_width="28dp"
+            android:layout_height="65dp"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:background="@drawable/conn_entrancebutton" />
+
+        <View
+            android:layout_width="30dp"
+            android:layout_height="0dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center"
+            android:layout_weight="1"/>
     </LinearLayout>
-
-    <Button
-        android:background="@drawable/conn_entranceButton"
-        android:id="@+id/inviteButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"/>
-
 
 </LinearLayout>
