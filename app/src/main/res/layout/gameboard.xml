@@ -16,6 +16,12 @@
         android:text="test"
         android:background="@drawable/game_roomName"/>
 
+    <TextView
+        android:id="@+id/tvMain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.97"/>
+
     <LinearLayout
         android:id="@+id/drawCanvas"
         android:orientation="horizontal"
@@ -78,7 +84,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="0.03"
+        android:weightSum="1"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
@@ -86,9 +93,10 @@
             android:id="@+id/answer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:layout_weight="0.7"
+            android:gravity="center"
             android:inputType="textPersonName"
-            android:text = "입력하세요"/>
+            android:hint = "입력하세요"/>
 
         <Button
             android:id="@+id/answerButton"
