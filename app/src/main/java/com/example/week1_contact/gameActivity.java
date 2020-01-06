@@ -28,6 +28,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
@@ -327,6 +331,7 @@ public class gameActivity extends Activity {
             jsonObject =  new JSONObject(pointObject.toString());
         } catch (JSONException e){
             e.printStackTrace();
+
         }
 
         mSocket.emit("draw", jsonObject);

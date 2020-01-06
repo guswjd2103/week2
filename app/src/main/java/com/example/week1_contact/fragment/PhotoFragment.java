@@ -223,11 +223,12 @@ public class PhotoFragment extends Fragment {
             comment.enqueue(new Callback<List<GalleryData>>() {
                 @Override
                 public void onResponse(Call<List<GalleryData>> call, Response<List<GalleryData>> response) {
-
+                    List<GalleryData> newgallery = response.body();
+                    Log.d("QWE","size : "+newgallery.size());
                 }
                 @Override
                 public void onFailure(Call<List<GalleryData>> call, Throwable t) {
-
+                    Log.d("QWE","failure "+t.toString());
                 }
             });
 

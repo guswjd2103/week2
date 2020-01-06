@@ -31,7 +31,7 @@ public class ThirdFragAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         final int pos = position;
         final Context context = parent.getContext();
 
@@ -54,6 +54,7 @@ public class ThirdFragAdapter extends BaseAdapter {
                 Intent intent = new Intent(v.getContext(), gameActivity.class);
                 intent.putExtra("name", userName);
                 intent.putExtra("roomName", room.getRoomName());
+
                 v.getContext().startActivity(intent);
             }
         });
