@@ -96,6 +96,7 @@ public class ThirdFragment extends Fragment {
             userName = bundle.getString("username");
         }
 
+
         //DB로 부터 player 정보 받아오는 부분/////
         roomA = new Room();
 //        userList = roomA.getUserName();
@@ -151,7 +152,6 @@ public class ThirdFragment extends Fragment {
         @Override
         public void call(Object... args) {
             // 전달받은 데이터 : JSON으로 서버에서 보냄
-
             try {
                 JSONObject receivedData = (JSONObject) args[0];
                 Log.d(TAG, receivedData.getString("msg"));

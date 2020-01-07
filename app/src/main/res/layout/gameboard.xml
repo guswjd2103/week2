@@ -1,68 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent" android:weightSum="12">
+    android:layout_height="match_parent" android:weightSum="12"
+    android:background="@drawable/game_background">
 
-
-    <TextView
-        android:id="@+id/playerName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="20sp"
-        android:layout_weight="1"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_vertical"
-        android:text="test"/>
-    <TextView
-        android:id="@+id/tvMain"
+    <LinearLayout
+        android:id="@+id/roomhead"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.97"/>
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/roomName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="test"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/problem_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:gravity="center"
+            android:text="문제내기        "
+            android:textSize="15sp" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/drawCanvas"
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="309dp"
-        android:layout_weight="9"/>
-]
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-        <Button
-            android:id="@+id/redButton"
-            android:background="#FF0000"
-            android:layout_gravity="start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/blueButton"
-            android:background="#0000FF"
-            android:layout_gravity="start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-        <Button
-            android:id="@+id/yellowButton"
-            android:background="#FFFF00"
-            android:layout_gravity="start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-
-        <Button
-            android:id="@+id/resetButton"
-            android:layout_gravity="end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="reset"/>
+        android:layout_height="wrap_content"
+        android:background="@drawable/game_canvas">
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/gametool"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/blackButton"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="#000000" />
+        <Button
+            android:id="@+id/redButton"
+            android:background="#FF0000"
+            android:layout_gravity="start"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"/>
+        <Button
+            android:id="@+id/blueButton"
+            android:background="#0000FF"
+            android:layout_gravity="start"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"/>
+        <Button
+            android:id="@+id/yellowButton"
+            android:background="#FFFF00"
+            android:layout_gravity="start"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"/>
+        <Button
+            android:id="@+id/greenButton"
+            android:background="#008000"
+            android:layout_gravity="start"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"/>
+        <Button
+            android:id="@+id/orchidButton"
+            android:background="#DA70D6"
+            android:layout_gravity="start"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"/>
+        <Button
+            android:id="@+id/grayButton"
+            android:background="#808080"
+            android:layout_gravity="start"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"/>
+
+        <Button
+            android:id="@+id/eraserButton"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@drawable/game_eraser" />
+
+        <View
+            android:layout_width="10dp"
+            android:layout_height="0dp" />
+
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="30dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@drawable/game_reset" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/gametell"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.03"
@@ -72,20 +118,20 @@
 
         <EditText
             android:id="@+id/answer"
-            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="0.6"
             android:gravity="center"
             android:inputType="textPersonName"
             android:hint = "입력하세요"/>
 
-<!--        android:ems="10"-->
         <Button
             android:id="@+id/answerButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            android:text="제출" />
+            android:layout_gravity="center_vertical"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
+            android:background="@drawable/game_submit" />
     </LinearLayout>
 
 </LinearLayout>
