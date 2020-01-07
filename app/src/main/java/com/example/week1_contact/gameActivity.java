@@ -491,7 +491,7 @@ public class gameActivity extends Activity {
                     answer = problem;
                     runOnUiThread(new Runnable() {
                         public void run() {
-                            problem_text.setText("????        ");
+                            problem_text.setText("    ????");
                         }
                     });
                 }
@@ -558,4 +558,16 @@ public class gameActivity extends Activity {
         mSocket.emit("leave", jsonObject);
         super.onStop();
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }
+
+
