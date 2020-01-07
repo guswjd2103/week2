@@ -53,7 +53,9 @@ public class gameActivity extends Activity {
 
     private ArrayList<String> problems = new ArrayList<String>(
             Arrays.asList("돈다발", "철학", "카레이서", "삼국시대", "가격표", "카카오나무", "가라오케", "가로수", "열매", "자선냄비", "사과", "소방관", "김경호", "산모", "티눈", "파인애플", "포옹",
-                    "적발", "원빈", "팔걸이", "작은북", "수표", "이판사판", "강아지풀", "정전")
+                    "적발", "원빈", "팔걸이", "작은북", "수표", "이판사판", "강아지풀", "정전", "가방", "세탁기", "귓속말", "비", "국가", "경기", "결혼", "귤", "구급차", "간호사", "거북이", "거미",
+                    "나비", "노랑색", "눈물", "눈사람", "낭떨어지", "날개", "눈싸움", "노랑색", "남아메리카", "서울", "달력", "닌자", "돈", "도끼", "담배", "달팽이", "돌", "달", "리을", "라", "말",
+                    "마술", "복싱", "복어", "바지", "밤", "번개", "버스", "산")
     );
 
     ArrayList<Point> points = new ArrayList<Point>();
@@ -339,7 +341,7 @@ public class gameActivity extends Activity {
                     Random r = new Random();
                     int i = r.nextInt(problems.size());
                     answer = problems.get(i);
-                    problem_text.setText(answer+"        ");
+                    problem_text.setText("    "+answer);
                     JsonObject problemObject = new JsonObject();
                     problemObject.addProperty("problem", answer + "");
                     problemObject.addProperty("roomName", roomName + "");
