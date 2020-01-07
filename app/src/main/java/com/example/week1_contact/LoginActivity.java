@@ -4,33 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
-import com.facebook.Profile;
-import com.facebook.appevents.AppEventsLogger;
-import com.facebook.internal.Utility;
+import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-
 import org.json.JSONObject;
-
 import java.util.Arrays;
-import java.util.List;
-
-import okhttp3.internal.Util;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class LoginActivity extends AppCompatActivity {
@@ -73,10 +59,13 @@ public class LoginActivity extends AppCompatActivity {
                             String email = object.getString("email");
                             String name = object.getString("name");
                             userName = name;
+
                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                             intent.putExtra("username",userName);
                             Log.d("frag_con","보낸 유저네임 -login:"+userName);
                             startActivity(intent);
+                            finish();
+                            LoginManager.getInstance().logOut();
 
                             Log.d("TAG","페이스북 이메일 ->"+ email);
                             Log.d("TAG", "페이스북 이름 ->" + name);
