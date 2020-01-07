@@ -7,13 +7,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,9 +34,12 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -44,13 +50,15 @@ public class gameActivity extends Activity {
     private String TAG = "GameActivity";
     private Socket mSocket;
     private String answer;
-    private boolean Offense_Defense = false;        //true : 그리기 & false : 맞추기
+    private int status = 0;        //0:일반 1:그림그리기 2:맞추기
     String userName;
     String roomName;
 
     private Button answerButton;
     private EditText answer_u;
     private TextView tvMain;
+
+    private List<String> problems = new ArrayList<String>();
 
     ArrayList<Point> points = new ArrayList<Point>();
     int color = Color.BLACK;
@@ -103,6 +111,7 @@ public class gameActivity extends Activity {
 
         @Override //그리기
         public boolean onTouchEvent(MotionEvent event) {
+            if(status != 1) return false;
             float x = event.getX();
             float y = event.getY();
 
@@ -131,27 +140,101 @@ public class gameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gameboard);
 
-        //서버로 부터 random 하게 제시어 받아오기
-        answer = "apple";
+        //design
+        DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
+        int width = dm.widthPixels;
+        int heigth = dm.heightPixels;
+        //chat layout 중첩시키기
+        LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LinearLayout chatLayout = (LinearLayout)layoutInflater.inflate(R.layout.chat,null);
+        chatLayout.setBackgroundColor(Color.parseColor("#4D000000"));
+
+        LinearLayout.LayoutParams param_chat = new LinearLayout.LayoutParams(width,heigth/5);
+        param_chat.setMargins(0,heigth/12,0,0);
+        addContentView(chatLayout,param_chat);
+
+        //room head
+        LinearLayout headLayout = (LinearLayout) findViewById(R.id.roomhead);
+        LinearLayout.LayoutParams param_head = new LinearLayout.LayoutParams(width, heigth/12);
+        param_head.setMargins(0,0,0,0);
+        headLayout.setLayoutParams(param_head);
+
+        //canvas
+        drawlinear = findViewById(R.id.drawCanvas);
+        LinearLayout.LayoutParams param_draw = new LinearLayout.LayoutParams(width,heigth*2/3);
+        param_draw.setMargins(0,0,0,0);
+        drawlinear.setLayoutParams(param_draw);
+
+        //tool
+        LinearLayout toolLayout = (LinearLayout)findViewById(R.id.gametool);
+        LinearLayout.LayoutParams param_tool = new LinearLayout.LayoutParams(width, heigth/15);
+        param_draw.setMargins(0,0,0,0);
+        toolLayout.setLayoutParams(param_tool);
+
+        //tell
+        LinearLayout tellLayout = (LinearLayout)findViewById(R.id.gametool);
+        LinearLayout.LayoutParams param_tell = new LinearLayout.LayoutParams(width, heigth/12);
+        param_draw.setMargins(0,0,0,0);
+        tellLayout.setLayoutParams(param_tell);
+
+
+        //
+        answer = "qwerasdfzxcv";
+        problems.add("apple");
 
         Intent intent = getIntent();
         userName = intent.getExtras().getString("name");
         roomName = intent.getExtras().getString("roomName");
 
-        TextView textView = (TextView)findViewById(R.id.playerName);
+        TextView textView = (TextView)findViewById(R.id.roomName);
         textView.setText(roomName);
 
         final MyView m = new MyView(this);
-        drawlinear = findViewById(R.id.drawCanvas);
         drawlinear.addView(m);
-
-        answer_u = (EditText)findViewById(R.id.answer);
         tvMain = (TextView)findViewById(R.id.tvMain);
 
+        TextView problem_text = (TextView)findViewById(R.id.problem_text);
+        Button blackButton = (Button)findViewById(R.id.blackButton);
         Button redButton = (Button)findViewById(R.id.redButton);
         Button blueButton = (Button)findViewById(R.id.blueButton);
         Button yellowButton = (Button)findViewById(R.id.yellowButton);
+        Button greenButton = (Button)findViewById(R.id.greenButton);
+        Button orchidButton =(Button)findViewById(R.id.orchidButton);
+        Button grayButton = (Button)findViewById(R.id.grayButton);
+        Button eraserButton = (Button)findViewById(R.id.eraserButton);
+        Button resetButton = (Button)findViewById(R.id.resetButton);
+        answer_u = (EditText)findViewById(R.id.answer);
+        answerButton = (Button)findViewById(R.id.answerButton);
 
+        problem_text.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                if(status != 0) return;
+                status = 1;
+                answer_u.setEnabled(false);
+                Random r = new Random();
+                int i = r.nextInt(problems.size());
+                answer = problems.get(i);
+                problem_text.setText(answer+"        ");
+                JsonObject problemObject = new JsonObject();
+                problemObject.addProperty("problem", answer + "");
+                problemObject.addProperty("roomName", roomName + "");
+                JSONObject jsonObject = null;
+
+                try{
+                    jsonObject =  new JSONObject(problemObject.toString());
+                } catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+                mSocket.emit("problem", jsonObject);
+
+            }
+        });
+        blackButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { color = Color.BLACK; }
+        });
         redButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -170,8 +253,30 @@ public class gameActivity extends Activity {
                 color = Color.YELLOW;
             }
         });
-
-        Button resetButton = (Button)findViewById(R.id.resetButton);
+        greenButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                color = Color.GREEN;
+            }
+        });
+        orchidButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                color = Color.parseColor("#DA70D6");
+            }
+        });
+        grayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                color = Color.GRAY;
+            }
+        });
+        eraserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                color = Color.WHITE;
+            }
+        });
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { //reset하면 RESET했다고 TOAST띄워주기
@@ -189,11 +294,10 @@ public class gameActivity extends Activity {
 
             }
         });
-
-        answerButton = (Button)findViewById(R.id.answerButton);
         answerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(status == 1) return;
                 JsonObject answerObject = new JsonObject();
                 answerObject.addProperty("answer", answer_u.getText() + "");
                 answerObject.addProperty("userName", userName + "");
@@ -217,8 +321,6 @@ public class gameActivity extends Activity {
 
                 InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(answer_u.getWindowToken(),0);
-                //정답과 비교해서 턴을 넘겨주는?
-//                if(Offense_Defense == true) return;
             }
         });
 
@@ -304,6 +406,19 @@ public class gameActivity extends Activity {
                             toast.show();
                         }
                     });
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }).on("receiveProblem",(Object... objects) -> { //다른사람은 false로 하고 answer도 보내줘야함
+                JsonParser jsonParsers = new JsonParser();
+                JsonObject probleminfo = (JsonObject) jsonParsers.parse(objects[0] + "");
+                Log.d("probleminfo", probleminfo.toString());
+                try{
+                    String problem = probleminfo.get("answer").getAsString();
+                    status = 2;
+                    answer_u.setEnabled(true);
+                    answer = problem;
                 }
                 catch (Exception e){
                     e.printStackTrace();
