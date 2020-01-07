@@ -2,13 +2,11 @@ package com.example.week1_contact;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.week1_contact.fragment.Room;
@@ -19,10 +17,12 @@ public class ThirdFragAdapter extends BaseAdapter {
 
     private ArrayList<Room> roomList = new ArrayList<Room>();
     private String userName;
+    private int userNum;
 
-    public ThirdFragAdapter(ArrayList<Room> roomList, String userName){
+    public ThirdFragAdapter(ArrayList<Room> roomList, String userName, int userNum) {
         this.userName = userName;
         this.roomList = roomList;
+        this.userNum = userNum;
     }
 
     @Override
@@ -40,14 +40,15 @@ public class ThirdFragAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.connected_person, parent, false);
         }
 
-        TextView nameTextView = (TextView) convertView.findViewById(R.id.userName);
-        TextView scoreTextView = (TextView) convertView.findViewById(R.id.userScore);
+        TextView numTextView = (TextView) convertView.findViewById(R.id.userName);
+//        TextView scoreTextView = (TextView) convertView.findViewById(R.id.userScore);
         Button inviteButton = (Button) convertView.findViewById(R.id.inviteButton);
 
         final Room room = roomList.get(position);
-        String userNum = Integer.toString(room.getUserNum());
-        nameTextView.setText(userNum);
-        scoreTextView.setText(room.getUserScore());
+//        String userNum = Integer.toString(room.getUserNum());
+//        String userNums = Integer.toString(userNum);
+        numTextView.setText(room.getRoomName());
+//        scoreTextView.setText(room.getUserScore());
         inviteButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {

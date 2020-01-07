@@ -138,6 +138,8 @@ public class gameActivity extends Activity {
         userName = intent.getExtras().getString("name");
         roomName = intent.getExtras().getString("roomName");
 
+        Log.d("roonName from fragment", roomName);
+
         TextView textView = (TextView)findViewById(R.id.playerName);
         textView.setText(roomName);
 
@@ -177,6 +179,7 @@ public class gameActivity extends Activity {
             public void onClick(View v) { //reset하면 RESET했다고 TOAST띄워주기
                 JsonObject resetObject = new JsonObject();
                 resetObject.addProperty("userName", userName + "");
+                resetObject.addProperty("roomName", roomName+"");
                 JSONObject jsonObject = null;
 
                 try{
@@ -197,6 +200,7 @@ public class gameActivity extends Activity {
                 JsonObject answerObject = new JsonObject();
                 answerObject.addProperty("answer", answer_u.getText() + "");
                 answerObject.addProperty("userName", userName + "");
+                answerObject.addProperty("roomName", roomName +"");
                 JSONObject jsonObject = null;
 
                 try{
@@ -249,8 +253,8 @@ public class gameActivity extends Activity {
                 try{
                     String eUser = entranceinfo.get("username").getAsString();
                     String eRoom = entranceinfo.get("roomName").getAsString();
-                    Log.d("roomName", eRoom);
-                    Log.d("userName", eUser);
+                    Log.d("roomName in socket", eRoom);
+                    Log.d("roomName", roomName);
                     if(eRoom.equals(roomName)) {
                         runOnUiThread(new Runnable() {
                             public void run() {
@@ -308,6 +312,26 @@ public class gameActivity extends Activity {
                 catch (Exception e){
                     e.printStackTrace();
                 }
+            }).on("leaveMsg", (Object... objects) -> {
+                JsonParser jsonParsers = new JsonParser();
+                JsonObject leaveinfo = (JsonObject) jsonParsers.parse(objects[0] + "");
+                Log.d("leaveinfo", leaveinfo.toString());
+                try{
+                    String userName = leaveinfo.get("username").getAsString();
+                    String leaveRoom = leaveinfo.get("roomName").getAsString();
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            final Toast toast = Toast.makeText(getApplicationContext(), userName +  "님께서 " +  leaveRoom + " 방을 나갔습니다", Toast.LENGTH_SHORT);
+                            int offsetX = 0;
+                            int offsetY = 0;
+                            toast.setGravity(Gravity.CENTER, offsetX, offsetY);
+                            toast.show();
+                        }
+                    });
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
             });
             mSocket.connect();
         } catch (Exception e) {
@@ -324,7 +348,7 @@ public class gameActivity extends Activity {
         pointObject.addProperty("y", point.getY());
         pointObject.addProperty("check", point.getCheck());
         pointObject.addProperty("color", point.getColor());
-
+        pointObject.addProperty("roomName", roomName+"");
         JSONObject jsonObject = null;
 
         try{
@@ -337,4 +361,39 @@ public class gameActivity extends Activity {
         mSocket.emit("draw", jsonObject);
     }
 
+    @Override
+    public void onBackPressed() {
+        JsonObject leaveObject = new JsonObject();
+        leaveObject.addProperty("roomName", roomName + "");
+        leaveObject.addProperty("userName", userName + "");
+        JSONObject jsonObject = null;
+
+        try{
+            jsonObject =  new JSONObject(leaveObject.toString());
+        } catch (JSONException e){
+            e.printStackTrace();
+
+        }
+
+        mSocket.emit("leave", jsonObject);
+        super.onBackPressed();
+    }
+
+    @Override
+    public void onStop() {
+        JsonObject leaveObject = new JsonObject();
+        leaveObject.addProperty("roomName", roomName + "");
+        leaveObject.addProperty("userName", userName + "");
+        JSONObject jsonObject = null;
+
+        try{
+            jsonObject =  new JSONObject(leaveObject.toString());
+        } catch (JSONException e){
+            e.printStackTrace();
+
+        }
+
+        mSocket.emit("leave", jsonObject);
+        super.onStop();
+    }
 }

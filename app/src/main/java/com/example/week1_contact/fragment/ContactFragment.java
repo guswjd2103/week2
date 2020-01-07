@@ -160,35 +160,35 @@ public class ContactFragment extends Fragment {
         numberList.clear();
         nameList.clear();
         contactsList.clear();
-        i=0;
-        ContentResolver resolver = context.getContentResolver();
-        Uri phoneUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
-
-        String[] projection = {ContactsContract.CommonDataKinds.Phone.CONTACT_ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.Contacts.PHOTO_ID};
-
-        Cursor cursor = resolver.query(phoneUri, projection, null, null, null);
-
-        if(cursor!=null){
-            while(cursor.moveToNext()){
-                int idx = cursor.getColumnIndex(projection[0]);
-                int nameidx = cursor.getColumnIndex(projection[1]);
-                int numberidx = cursor.getColumnIndex(projection[2]);
-                int photoidx = cursor.getInt(3);
-
-                String name = cursor.getString(nameidx);
-                String number = cursor.getString(numberidx);
-
-                ContactData contactData = new ContactData(photoidx, name, number, i);
-                i+=1;
-                contactsList.add(contactData);
-                numberList.add(number);
-                nameList.add(name);
-            }
-        }
-
-        Collections.sort(contactsList);
-
-        cursor.close();
+//        i=0;
+//        ContentResolver resolver = context.getContentResolver();
+//        Uri phoneUri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
+//
+//        String[] projection = {ContactsContract.CommonDataKinds.Phone.CONTACT_ID, ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME, ContactsContract.CommonDataKinds.Phone.NUMBER, ContactsContract.Contacts.PHOTO_ID};
+//
+//        Cursor cursor = resolver.query(phoneUri, projection, null, null, null);
+//
+//        if(cursor!=null){
+//            while(cursor.moveToNext()){
+//                int idx = cursor.getColumnIndex(projection[0]);
+//                int nameidx = cursor.getColumnIndex(projection[1]);
+//                int numberidx = cursor.getColumnIndex(projection[2]);
+//                int photoidx = cursor.getInt(3);
+//
+//                String name = cursor.getString(nameidx);
+//                String number = cursor.getString(numberidx);
+//
+//                ContactData contactData = new ContactData(photoidx, name, number, i);
+//                i+=1;
+//                contactsList.add(contactData);
+//                numberList.add(number);
+//                nameList.add(name);
+//            }
+//        }
+//
+//        Collections.sort(contactsList);
+//
+//        cursor.close();
 
 
         /////////////
@@ -213,7 +213,7 @@ public class ContactFragment extends Fragment {
         comment2.enqueue(new Callback<List<ContactData>>() {
             @Override
             public void onResponse(Call<List<ContactData>> call, Response<List<ContactData>> response) {
-                Log.d("성공","성공");
+//                Log.d("성공","성공");
                 List<ContactData> newlist = response.body();
                 Log.d("받은 리스트","사이즈:"+newlist.size());
                 for(int i = 0; i< newlist.size(); i++){
