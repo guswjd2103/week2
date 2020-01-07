@@ -65,8 +65,6 @@ public class LoginActivity extends AppCompatActivity {
                 requestMe(loginResult.getAccessToken());
                 AccessToken accessTocken = loginResult.getAccessToken();
 
-
-
                 GraphRequest request = GraphRequest.newMeRequest(accessTocken, new GraphRequest.GraphJSONObjectCallback() {
                     @Override
                     public void onCompleted(JSONObject object, GraphResponse response) {

@@ -49,6 +49,7 @@ public class gameActivity extends Activity {
     private Button answerButton;
     private EditText answer_u;
     private TextView tvMain;
+    private List<String> chatStrings= new ArrayList<String>();
 
     private ArrayList<String> problems = new ArrayList<String>(
             Arrays.asList("돈다발", "철학", "카레이서", "삼국시대", "가격표", "카카오나무", "가라오케", "가로수", "열매", "자선냄비", "사과", "소방관", "김경호", "산모", "티눈", "파인애플", "포옹",
@@ -142,10 +143,10 @@ public class gameActivity extends Activity {
         //chat layout 중첩시키기
         LayoutInflater layoutInflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout chatLayout = (LinearLayout)layoutInflater.inflate(R.layout.chat,null);
-        chatLayout.setBackgroundColor(Color.parseColor("#4D000000"));
+        chatLayout.setBackgroundColor(Color.parseColor("#1A000000"));
 
-        LinearLayout.LayoutParams param_chat = new LinearLayout.LayoutParams(width,heigth/5);
-        param_chat.setMargins(0,heigth/12,0,0);
+        LinearLayout.LayoutParams param_chat = new LinearLayout.LayoutParams(width,heigth*6/40);
+        param_chat.setMargins(0,heigth*87/120,0,0);
         addContentView(chatLayout,param_chat);
 
         //room head
@@ -156,25 +157,30 @@ public class gameActivity extends Activity {
 
         //canvas
         drawlinear = findViewById(R.id.drawCanvas);
-        LinearLayout.LayoutParams param_draw = new LinearLayout.LayoutParams(width,heigth*2/3);
+        LinearLayout.LayoutParams param_draw = new LinearLayout.LayoutParams(width,heigth*23/40);
         param_draw.setMargins(0,0,0,0);
         drawlinear.setLayoutParams(param_draw);
 
         //tool
         LinearLayout toolLayout = (LinearLayout)findViewById(R.id.gametool);
         LinearLayout.LayoutParams param_tool = new LinearLayout.LayoutParams(width, heigth/15);
-        param_draw.setMargins(0,0,0,0);
+        param_tool.setMargins(0,0,0,0);
         toolLayout.setLayoutParams(param_tool);
 
         //tell
-        LinearLayout tellLayout = (LinearLayout)findViewById(R.id.gametool);
+        LinearLayout tellLayout = (LinearLayout)findViewById(R.id.gametell);
         LinearLayout.LayoutParams param_tell = new LinearLayout.LayoutParams(width, heigth/12);
-        param_draw.setMargins(0,0,0,0);
+        param_tell.setMargins(0,heigth*6/40,0,0);
         tellLayout.setLayoutParams(param_tell);
 
 
         //
         answer = "qwerasdfzxcv";
+        chatStrings.add("");
+        chatStrings.add("");
+        chatStrings.add("");
+        chatStrings.add("");
+
         problems.add("apple");
 
         Intent intent = getIntent();
@@ -210,7 +216,7 @@ public class gameActivity extends Activity {
                 Random r = new Random();
                 int i = r.nextInt(problems.size());
                 answer = problems.get(i);
-                problem_text.setText(answer+"        ");
+                problem_text.setText("    "+answer);
                 JsonObject problemObject = new JsonObject();
                 problemObject.addProperty("problem", answer + "");
                 problemObject.addProperty("roomName", roomName + "");
@@ -276,6 +282,7 @@ public class gameActivity extends Activity {
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { //reset하면 RESET했다고 TOAST띄워주기
+                if(status != 1) return;
                 JsonObject resetObject = new JsonObject();
                 resetObject.addProperty("userName", userName + "");
                 resetObject.addProperty("roomName", roomName+"");
@@ -374,7 +381,13 @@ public class gameActivity extends Activity {
                 JsonParser jsonParsers = new JsonParser();
                 JsonObject jsonObject = (JsonObject) jsonParsers.parse(objects[0] + "");
                 runOnUiThread(()->{
-                    tvMain.setText(tvMain.getText().toString()+jsonObject.get("answer").getAsString());
+                    String chatString = "";
+                    chatStrings.add(jsonObject.get("answer").getAsString());
+                    int chs = chatStrings.size();
+                    for(int i = 4; i>0; i--){
+                        chatString = chatString + chatStrings.get(chs-i);
+                    }
+                    tvMain.setText(chatString);
                 });
             }).on("newUser", (Object... objects) -> {
                 Log.d("newUsersocket", "enternewUser socket");

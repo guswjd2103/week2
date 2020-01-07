@@ -99,22 +99,11 @@ public class ThirdFragment extends Fragment {
 
         //DB로 부터 player 정보 받아오는 부분/////
         roomA = new Room();
-//        userList = roomA.getUserName();
-//        if(userList!=null) {
-//            if(!userList.contains(userName)) {
-//                userList.add(userName);
-//            }
-//        } else {
-//            userList = new ArrayList<String>();
-//            userList.add(userName);
-//        }
-
-//        int userNum = userList.size();
         roomA.setUserNum(userNum);
         roomA.setUserScore("0");
-        roomA.setRoomNum("호호호");
+        roomA.setRoomNum("날 이겨봐");
         Room roomB = new Room();
-        roomB.setRoomNum("g하하ㅏ하");
+        roomB.setRoomNum("즐겜하실분");
         roomB.setUserScore("0");
 
         rooms.add(roomA);

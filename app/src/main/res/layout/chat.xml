@@ -4,10 +4,11 @@
     android:layout_height="match_parent">
 
     <TextView
+        android:fontFamily="@font/hoonmakdaeyunpilr"
         android:id="@+id/tvMain"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:textSize="15sp"
-        android:textColor="#FFFFFF"/>
+        android:textColor="#002060"/>
 
 </LinearLayout>

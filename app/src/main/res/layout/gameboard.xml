@@ -8,25 +8,32 @@
         android:id="@+id/roomhead"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/roomName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:text="test"
-            android:textSize="20sp" />
-
-        <TextView
+            android:fontFamily="@font/hoonddukbokki"
             android:id="@+id/problem_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="    문제내기"
+            android:textSize="20sp"
+            android:background="@drawable/game_problem"/>
+
+        <View
+            android:layout_width="100dp"
+            android:layout_height="0dp"/>
+
+        <TextView
+            android:fontFamily="@font/maplestorybold"
+            android:id="@+id/roomName"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="end"
             android:gravity="center"
-            android:text="문제내기        "
-            android:textSize="15sp" />
+            android:text="test"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -42,47 +49,50 @@
     <LinearLayout
         android:id="@+id/gametool"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center">
+
 
         <Button
             android:id="@+id/blackButton"
             android:layout_width="30dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="#000000" />
+            android:background="@drawable/blackbutton" />
         <Button
             android:id="@+id/redButton"
-            android:background="#FF0000"
+            android:background="@drawable/redbutton"
             android:layout_gravity="start"
             android:layout_width="30dp"
             android:layout_height="match_parent"/>
         <Button
             android:id="@+id/blueButton"
-            android:background="#0000FF"
+            android:background="@drawable/bluebutton"
             android:layout_gravity="start"
             android:layout_width="30dp"
             android:layout_height="match_parent"/>
         <Button
             android:id="@+id/yellowButton"
-            android:background="#FFFF00"
+            android:background="@drawable/yellowbutton"
             android:layout_gravity="start"
             android:layout_width="30dp"
             android:layout_height="match_parent"/>
         <Button
             android:id="@+id/greenButton"
-            android:background="#008000"
+            android:background="@drawable/greenbutton"
             android:layout_gravity="start"
             android:layout_width="30dp"
             android:layout_height="match_parent"/>
         <Button
             android:id="@+id/orchidButton"
-            android:background="#DA70D6"
+            android:background="@drawable/orchidbutton"
             android:layout_gravity="start"
             android:layout_width="30dp"
             android:layout_height="match_parent"/>
         <Button
             android:id="@+id/grayButton"
-            android:background="#808080"
+            android:background="@drawable/graybutton"
             android:layout_gravity="start"
             android:layout_width="30dp"
             android:layout_height="match_parent"/>
