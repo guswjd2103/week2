@@ -33,7 +33,6 @@
             android:layout_gravity="center"
             android:gravity="center_vertical"/>
 
-
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -49,12 +48,6 @@
             android:layout_weight="1"
             android:background="@drawable/conn_entrancebutton" />
 
-        <View
-            android:layout_width="30dp"
-            android:layout_height="0dp"
-            android:gravity="center_vertical"
-            android:layout_gravity="center"
-            android:layout_weight="1"/>
     </LinearLayout>
 
 </LinearLayout>
