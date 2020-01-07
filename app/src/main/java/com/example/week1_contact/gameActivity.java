@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,23 +26,16 @@ import androidx.annotation.Nullable;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
-import io.socket.emitter.Emitter;
 
 public class gameActivity extends Activity {
 
@@ -58,7 +50,10 @@ public class gameActivity extends Activity {
     private EditText answer_u;
     private TextView tvMain;
 
-    private List<String> problems = new ArrayList<String>();
+    private ArrayList<String> problems = new ArrayList<String>(
+            Arrays.asList("돈다발", "철학", "카레이서", "삼국시대", "가격표", "카카오나무", "가라오케", "가로수", "열매", "자선냄비", "사과", "소방관", "김경호", "산모", "티눈", "파인애플", "포옹",
+                    "적발", "원빈", "팔걸이", "작은북", "수표", "이판사판", "강아지풀", "정전")
+    );
 
     ArrayList<Point> points = new ArrayList<Point>();
     int color = Color.BLACK;
@@ -277,6 +272,7 @@ public class gameActivity extends Activity {
                 color = Color.WHITE;
             }
         });
+
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { //reset하면 RESET했다고 TOAST띄워주기
@@ -316,10 +312,43 @@ public class gameActivity extends Activity {
                 mSocket.emit("reqMsg", jsonObject);
 
                 if(answer.equals(answer_u.getText().toString())){
-                    Toast.makeText(getApplicationContext(), "Correct", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), userName +  "님 Correct!!", Toast.LENGTH_SHORT); // 권한 넘겨주고 문제 새로 내기\
+                    Log.d("correct answer", roomName);
+                    JsonObject resetObject2 = new JsonObject();
+                    resetObject2.addProperty("userName", userName + "");
+                    resetObject2.addProperty("roomName", roomName+ "");
+                    JSONObject jsonObject3 = null;
+
+                    try{
+                        jsonObject3 =  new JSONObject(resetObject2.toString());
+                    } catch (JSONException e){
+                        e.printStackTrace();
+                    }
+
+                    mSocket.emit("reset", jsonObject3);
+
+                    status = 1;
+                    answer_u.setEnabled(false);
+                    Random r = new Random();
+                    int i = r.nextInt(problems.size());
+                    answer = problems.get(i);
+                    problem_text.setText(answer+"        ");
+                    JsonObject problemObject = new JsonObject();
+                    problemObject.addProperty("problem", answer + "");
+                    problemObject.addProperty("roomName", roomName + "");
+                    JSONObject jsonObject2 = null;
+
+                    try{
+                        jsonObject2 =  new JSONObject(problemObject.toString());
+                    } catch (JSONException e){
+                        e.printStackTrace();
+                    }
+
+                    mSocket.emit("problem", jsonObject2);
+
                 }
                 else{
-                    Toast.makeText(getApplicationContext(), "InCorrect", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getApplicationContext(), "InCorrect", Toast.LENGTH_SHORT).show();
                 }
                 answer_u.setText("");
 
@@ -401,15 +430,15 @@ public class gameActivity extends Activity {
                     String userName = resetinfo.get("resetMsg").getAsString();
                     points.clear();
                     m.invalidate();
-                    runOnUiThread(new Runnable() {
-                        public void run() {
-                            final Toast toast = Toast.makeText(getApplicationContext(), userName +  "님께서 " + " 그림판을 reset 했습니다", Toast.LENGTH_SHORT);
-                            int offsetX = 0;
-                            int offsetY = 0;
-                            toast.setGravity(Gravity.CENTER, offsetX, offsetY);
-                            toast.show();
-                        }
-                    });
+//                    runOnUiThread(new Runnable() {
+//                        public void run() {
+//                            final Toast toast = Toast.makeText(getApplicationContext(), userName +  "님께서 " + " 그림판을 reset 했습니다", Toast.LENGTH_SHORT);
+//                            int offsetX = 0;
+//                            int offsetY = 0;
+//                            toast.setGravity(Gravity.CENTER, offsetX, offsetY);
+//                            toast.show();
+//                        }
+//                    });
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -419,7 +448,7 @@ public class gameActivity extends Activity {
                 JsonObject leaveinfo = (JsonObject) jsonParsers.parse(objects[0] + "");
                 Log.d("leaveinfo", leaveinfo.toString());
                 try{
-                    String userName = leaveinfo.get("username").getAsString();
+                    String userName = leaveinfo.get("userName").getAsString();
                     String leaveRoom = leaveinfo.get("roomName").getAsString();
                     runOnUiThread(new Runnable() {
                         public void run() {
@@ -443,6 +472,11 @@ public class gameActivity extends Activity {
                     status = 2;
                     answer_u.setEnabled(true);
                     answer = problem;
+                    runOnUiThread(new Runnable() {
+                        public void run() {
+                            problem_text.setText("????        ");
+                        }
+                    });
                 }
                 catch (Exception e){
                     e.printStackTrace();
@@ -470,7 +504,6 @@ public class gameActivity extends Activity {
             jsonObject =  new JSONObject(pointObject.toString());
         } catch (JSONException e){
             e.printStackTrace();
-
         }
 
         mSocket.emit("draw", jsonObject);
@@ -487,7 +520,6 @@ public class gameActivity extends Activity {
             jsonObject =  new JSONObject(leaveObject.toString());
         } catch (JSONException e){
             e.printStackTrace();
-
         }
 
         mSocket.emit("leave", jsonObject);
@@ -505,9 +537,7 @@ public class gameActivity extends Activity {
             jsonObject =  new JSONObject(leaveObject.toString());
         } catch (JSONException e){
             e.printStackTrace();
-
         }
-
         mSocket.emit("leave", jsonObject);
         super.onStop();
     }
