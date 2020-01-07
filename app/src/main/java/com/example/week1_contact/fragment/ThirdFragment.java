@@ -43,42 +43,6 @@ public class ThirdFragment extends Fragment {
     int userNum;
     Room roomA;
     ThirdFragAdapter thirdFragAdapter;
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//
-//        try {
-//            mSocket = IO.socket("http://192.249.19.251:0280");
-////            mSocket.connect();
-////            mSocket.on(Socket.EVENT_CONNECT, onConnect); //Socket.EVENT_CONNECT : 연결이 성공하면 발생하는 이벤트, onConnect : callback 객체
-////            mSocket.on("serverMessage", onMessageReceived); // serverMessage 이벤트로 오는 메시지를 받기 위한 call back 객체 : onMessageReceived
-////            mSocket.on("countUsers", onCountUsers);
-//            mSocket.on(Socket.EVENT_CONNECT, (Object... objects) -> {
-//                mSocket.emit("clientMessage", "hi"); //서버쪽으로 이벤트 발생시키기
-//                mSocket.emit("countUsers", "count users");
-//            }).on("serverMessage", (Object... objects) -> {
-//                try {
-//                    JSONObject receivedData = (JSONObject)objects[0];
-//                    Log.d(TAG, receivedData.getString("msg"));
-//                    Log.d(TAG, receivedData.getString("data"));
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            }).on("countUserNum", (Object... objects) -> {
-//                Log.d("countUserNum", "socket response");
-//                try {
-//                    JSONObject receivedCount = (JSONObject) objects[0];
-//                    userNum = receivedCount.getInt("userNum");
-//                    Log.d("usernum", Integer.toString(receivedCount.getInt("userNum")));
-//                    Log.d("user list", receivedCount.getJSONArray("users").toString());
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
-//                }
-//            });
-//        } catch(URISyntaxException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
     @Override
@@ -99,15 +63,40 @@ public class ThirdFragment extends Fragment {
 
         //DB로 부터 player 정보 받아오는 부분/////
         roomA = new Room();
-        roomA.setUserNum(userNum);
-        roomA.setUserScore("0");
         roomA.setRoomNum("날 이겨봐");
         Room roomB = new Room();
         roomB.setRoomNum("즐겜하실분");
-        roomB.setUserScore("0");
+        Room roomC = new Room();
+        roomC.setRoomNum("초보만");
+        Room roomD = new Room();
+        roomD.setRoomNum("아무나 들어오시오");
+        Room roomE = new Room();
+        roomE.setRoomNum("그림 실력 한번 볼까??");
+        Room roomF = new Room();
+        roomF.setRoomNum("초보 입자앙");
+        Room roomG = new Room();
+        roomG.setRoomNum("꿀잼");
+        Room roomH = new Room();
+        roomH.setRoomNum("이름 뭐하지");
+        Room roomI = new Room();
+        roomI.setRoomNum("정하기 힘드네");
+        Room roomJ = new Room();
+        roomJ.setRoomNum("MadCamp");
+        Room roomK = new Room();
+        roomK.setRoomNum("Catch Mind");
 
         rooms.add(roomA);
         rooms.add(roomB);
+        rooms.add(roomC);
+        rooms.add(roomD);
+        rooms.add(roomE);
+        rooms.add(roomF);
+        rooms.add(roomG);
+        rooms.add(roomH);
+        rooms.add(roomI);
+        rooms.add(roomJ);
+        rooms.add(roomK);
+
         //////////////////////////////////////////
 
         thirdFragAdapter = new ThirdFragAdapter(rooms, userName, userNum);

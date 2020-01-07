@@ -8,7 +8,8 @@
         android:id="@+id/roomhead"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:weightSum="5">
 
         <TextView
             android:fontFamily="@font/hoonddukbokki"
@@ -17,12 +18,14 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
+            android:layout_weight="0.5"
             android:text="    문제내기"
             android:textSize="20sp"
             android:background="@drawable/game_problem"/>
 
         <View
-            android:layout_width="100dp"
+            android:layout_weight="1"
+            android:layout_width="40dp"
             android:layout_height="0dp"/>
 
         <TextView
@@ -33,7 +36,8 @@
             android:layout_gravity="end"
             android:gravity="center"
             android:text="test"
-            android:textSize="20sp" />
+            android:layout_weight="3"
+            android:textSize="18sp" />
 
     </LinearLayout>
 

@@ -180,6 +180,8 @@ public class gameActivity extends Activity {
         chatStrings.add("");
         chatStrings.add("");
         chatStrings.add("");
+        chatStrings.add("");
+        chatStrings.add("");
 
         problems.add("apple");
 
@@ -384,7 +386,7 @@ public class gameActivity extends Activity {
                     String chatString = "";
                     chatStrings.add(jsonObject.get("answer").getAsString());
                     int chs = chatStrings.size();
-                    for(int i = 4; i>0; i--){
+                    for(int i = 6; i>0; i--){
                         chatString = chatString + chatStrings.get(chs-i);
                     }
                     tvMain.setText(chatString);
